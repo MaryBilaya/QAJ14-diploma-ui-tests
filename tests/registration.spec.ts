@@ -1,16 +1,19 @@
 import { test, expect } from '../fixtures.ts';
 import { REGISTR_USER } from '../fixtures.ts';
 
-test.describe('Registration', () => {
+test.describe('Registration page', () => {
 
-    test.beforeEach(async ({ registrationPage, page }, testInfo) => {
+    test.beforeEach(async ({ registrationPage}) => {
         await registrationPage.openRegistrationPage();
+    });
+
+    test.afterEach(async ({ page }, testInfo) => {
         const screen = await page.screenshot({ fullPage: true });
-        await testInfo.attach('full-page', {
+        await testInfo.attach('final-state', {
             body: screen,
             contentType: 'image/png',
-        });
-    });
+        });       
+    });    
 
     test('registration page title is visible',
         {tag: ['@registration']},

@@ -68,7 +68,7 @@ export class RegistrationPage extends BasePage {
             {locator: this.stateInput, value: REGISTR_USER.state},
             {locator: this.phoneInput, value: REGISTR_USER.phone},
             {locator: this.emailInput, value: REGISTR_USER.email},
-            {locator: this.passwordInput, value: REGISTR_USER.valid_password},
+            {locator: this.passwordInput, value: REGISTR_USER.validPassword},
         ];
     }
 

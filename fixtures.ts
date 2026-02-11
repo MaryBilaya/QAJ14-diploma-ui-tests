@@ -3,6 +3,9 @@ import { BasePage } from './pages/base_page';
 import { HomePage } from './pages/home_page';
 import { LoginPage } from './pages/login_page';
 import { RegistrationPage } from './pages/registration_page';
+import { ForgotPasswordPage } from './pages/forgot_password_page';
+import { MenuBar } from './pages/elements/menubar';
+import { ContactPage } from './pages/contact_page';
 
 
 export const REGISTR_USER = {
@@ -18,9 +21,10 @@ export const REGISTR_USER = {
     phone: '375290000000',
     invalidPhone: '+375290000000',
     email: '5test@mail.ru',
+    unregisteredEmail: 'unregistrtest@mail.ru',
     invalidEmailFormat: 'test',
-    valid_password: '5Suc$esS',
-    invalid_password: 'Suc$esS890'
+    validPassword: '5Suc$esS',
+    invalidPassword: 'Suc$esS890'
 }
 
 
@@ -29,6 +33,9 @@ type Fixtures = {
     homePage: HomePage;
     loginPage: LoginPage;
     registrationPage: RegistrationPage;
+    forgotPasswordPage: ForgotPasswordPage;
+    menuBar: MenuBar;
+    contactPage: ContactPage;
 }
 
 export const test = base.extend<Fixtures>({
@@ -51,6 +58,22 @@ export const test = base.extend<Fixtures>({
         const registrationPage = new RegistrationPage(page);
         await use(registrationPage);
     },
+
+    forgotPasswordPage: async ({ page }, use) => {
+        const forgotPasswordPage = new ForgotPasswordPage(page);
+        await use(forgotPasswordPage);
+    },    
+
+    menuBar: async ({ page }, use) => {
+    contactPage: ContactPage;
+        const menuBar = new MenuBar(page);
+        await use(menuBar);
+    },  
+    
+    contactPage: async ({ page }, use) => {
+        const contactPage = new ContactPage(page);
+        await use(contactPage);
+    },    
 });
 
 export const expect = BaseExpect;

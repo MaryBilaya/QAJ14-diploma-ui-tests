@@ -2,14 +2,17 @@ import { test, expect } from '../fixtures.ts';
 
 test.describe('Home page', () => {
 
-    test.beforeEach(async ({ homePage, page}, testInfo) => {
+    test.beforeEach(async ({ homePage }) => {
         await homePage.openHomePage();
+    });
+
+    test.afterEach(async ({ page }, testInfo) => {
         const screen = await page.screenshot({ fullPage: true });
-        await testInfo.attach('full-page', {
+        await testInfo.attach('final-state', {
             body: screen,
             contentType: 'image/png',
-        });
-    });
+        });       
+    });    
 
     test('home page filters area is visible', 
         {tag: ['@homepage']},
@@ -42,7 +45,7 @@ test.describe('Home page', () => {
         }      
     )
 
-    test.only('check the sort filter: Price (Low - High)',
+    test('check the sort filter: Price (Low - High)',
         {tag: ['@homepage', '@filters']},
         async ({ homePage }, testInfo) => {
             await homePage.sortFilter.selectOption('price,asc');
