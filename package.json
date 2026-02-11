@@ -1,0 +1,32 @@
+{
+  "name": "playwright-ui-tests-diploma",
+  "version": "1.0.0",
+  "description": "playwright-ui-test-diploma-task3",
+  "homepage": "https://github.com/MaryBilaya/playwright-ui-tests-diploma#readme",
+  "bugs": {
+    "url": "https://github.com/MaryBilaya/playwright-ui-tests-diploma/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaryBilaya/playwright-ui-tests-diploma.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "pw": "npx playwright test",
+    "pw registr":  "npx playwright test --grep '@registration'",
+    "pw login": "npx playwright test --grep '@login'",
+    "pw state": "npx playwright test --grep '@state'"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.1", 
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "playwright": "^1.58.2"
+  }
+}
