@@ -41,7 +41,7 @@ test.describe('Registration page', () => {
             await registrationPage.registerButton.click();
 
             await expect(page).toHaveURL(loginPage.loginUrl);
-            // await expect(loginPage.loginButton).toBeVisible({ timeout: 10_000 });
+            await expect(page.getByRole('heading', {name: 'Login'})).toBeVisible();
 
             //2. error on duplicate registration
             await registrationPage.openRegistrationPage()

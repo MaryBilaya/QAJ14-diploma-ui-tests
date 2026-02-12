@@ -16,7 +16,7 @@ export class LoginPage extends BasePage {
     constructor(page: Page) {
         super(page);
         this.loginUrl = 'https://practicesoftwaretesting.com/auth/login',
-        this.emailInput = page.locator('[data-test="email"]');
+        this.emailInput = page.locator('//input[@data-test="email" and @id="email"]');
         this.passwordInput = page.locator('[data-test="password"]');
         this.loginButton = page.locator('[data-test="login-submit"]');
         this.loginTitle = page.locator('h3', { hasText: 'Login'});
