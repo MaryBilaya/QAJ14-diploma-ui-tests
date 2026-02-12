@@ -1,14 +1,24 @@
 # playwright-ui-tests-diploma
 
-# Запуск автотестов
+## Техническое задание
+- Реализовать тестовый фреймворк для UI тестирования для web приложения https://practicesoftwaretesting.com/:
+ - тестовый фреймворк брать на свое усмотрение: WDIO (BDD по желанию), cypress или playwright
+        - минимум 3 разных страницы
+        - минимум 10 тестов на каждую страницу
+ - использовать Page Object, Page Factory
+ - Добавить allure репортер
+ - Использовать различные локаторы и селекторы
+ - Организовывать тесты в группы
+ - Настроить в ci (на свой выбор) запуск тестов в MR и невозможность вмержить если тесты упали
+
+## Запуск автотестов
 npm test
 
-# Просмотр allure отчета с историчностью прогонов (History, Trend)
+## Просмотр allure отчета с историчностью прогонов (History, Trend)
 1. npm test
 2. npm run allure:history
 3. npm run allure:report
 4. npm run allure:open
-
 
 ## Registration page tests
 |  №  |    describe       |                         test                         |         tag          |
@@ -25,7 +35,6 @@ npm test
 | 5.  | Registration page | error checking for incorrect phone format            | @registration        |
 | 6.  | Registration page | error checking for an incorrect value date of birth  | @registration        |
 
-
 ## Login page tests
 |  №  |    describe       |                         test                         |         tag          |
 |-----|-------------------|------------------------------------------------------|----------------------|
@@ -36,14 +45,12 @@ npm test
 | 4.  | Login page        | checking the register link                           | @login               |
 | 5.  | Login page        | checking the forgot your password link               | @login               |
 
-
 ## Home page tests
 |  №  |    describe       |                       test                           |         tag          |
 |-----|-------------------|------------------------------------------------------|----------------------|
 | 1.  | Home page         | home page filters area is visible                    | @homepage            |
 | 2.  | Home page         | check the sort filter: Price (High - Low)            | @homepage, @filters  |
 | 3.  | Home page         | check the sort filter: Price (Low - High)            | @homepage, @filters  |
-
 
 ## Menubar page tests
 |  №  |    describe       |                       test                           |         tag          |
@@ -58,7 +65,4 @@ npm test
 | 4.  | Menubar           | checking transition to rentals category              | @menubar, @categories|
 
 
-
-npx playwright codegen https://practicesoftwaretesting.com/
-npx playwright test --debug
 
