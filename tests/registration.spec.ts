@@ -40,8 +40,8 @@ test.describe('Registration page', () => {
             await registrationPage.countryInput.selectOption(REGISTR_USER.country);
             await registrationPage.registerButton.click();
 
-            await expect(loginPage.loginButton).toBeVisible();
             await expect(page).toHaveURL(loginPage.loginUrl);
+            await expect(loginPage.loginButton).toBeVisible({ timeout: 10_000 });
 
             //2. error on duplicate registration
             await registrationPage.openRegistrationPage()
