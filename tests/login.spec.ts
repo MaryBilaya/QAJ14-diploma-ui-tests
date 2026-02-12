@@ -1,8 +1,6 @@
 import { test, expect } from '../fixtures.ts';
 import { REGISTR_USER } from '../fixtures.ts';
 import { attachInfo } from '../helpers/attachments.ts';
-import { ForgotPasswordPage } from '../pages/forgot_password_page.ts';
-import { LoginPage } from '../pages/login_page.ts';
 
 
 test.describe('Login page', () => {

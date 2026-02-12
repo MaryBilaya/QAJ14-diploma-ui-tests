@@ -1,5 +1,6 @@
 import { test, expect } from '../fixtures.ts';
 import { REGISTR_USER } from '../fixtures.ts';
+import { randomEmail } from '../helpers/random_email.ts'
 
 test.describe('Registration page', () => {
 
@@ -29,24 +30,33 @@ test.describe('Registration page', () => {
         }
     )    
 
-    test('register user and error on duplicate registration',
+    test('user registration, error on duplicate registration, user login',
         {tag: ['@registration']},
-        async ({ registrationPage, loginPage, page }) => {
-            //регистрация пользователя
-            await registrationPage.fillTheRegistrationFormWithValidUser();
+        async ({ registrationPage, loginPage, myAccountPage, page, menuBar }) => {  
+            const uniqueEmail = randomEmail('playwright');
+
+            //1. user registration
+            await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
             await registrationPage.countryInput.selectOption(REGISTR_USER.country);
             await registrationPage.registerButton.click();
 
             await expect(loginPage.loginTitle).toBeVisible();
             await expect(page).toHaveURL(loginPage.loginUrl);
 
-            //ошибка при повторной попытке регистрации одного и того же пользователя
+            //2. error on duplicate registration
             await registrationPage.openRegistrationPage()
-            await registrationPage.fillTheRegistrationFormWithValidUser();
+            await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
             await registrationPage.countryInput.selectOption(REGISTR_USER.country);
             await registrationPage.registerButton.click();
 
             await expect(registrationPage.duplicateRegisterError).toContainText('A customer with this email address already exists.');
+
+            //3. user login
+            await loginPage.openLoginPage();
+            await loginPage.login(uniqueEmail, REGISTR_USER.validPassword);
+
+            await expect(myAccountPage.myAccountTitle).toBeVisible();
+            await expect(menuBar.loginUserName).toHaveText(` ${REGISTR_USER.firstName} ${REGISTR_USER.lastName} `);
         }
     )  
 
@@ -54,7 +64,8 @@ test.describe('Registration page', () => {
         {tag: ['@registration']},
         async ({ registrationPage }) => {
             //делаем копию массива validUserFields, в котором только для поля email меняется значение на невалидное
-            const fieldWithInvalidEmail = registrationPage.validUserFields.map(f => f.locator === registrationPage.emailInput
+            const uniqueEmail = randomEmail('playwright');
+            const fieldWithInvalidEmail = registrationPage.getvalidUserFields(uniqueEmail).map(f => f.locator === registrationPage.emailInput
                 ? { ...f, value: REGISTR_USER.invalidEmailFormat }
                 : f,
             )
@@ -70,7 +81,9 @@ test.describe('Registration page', () => {
         {tag: ['@registration']},  
         async ({ registrationPage }) => {
             //делаем копию массива validUserFields, в котором только для поля Phone меняется значение на невалидное
-            const fieldWithInvalidPhone = registrationPage.validUserFields.map(f => f.locator === registrationPage.phoneInput
+            const uniqueEmail = randomEmail('playwright');
+            const fieldWithInvalidPhone = registrationPage.getvalidUserFields(uniqueEmail)
+            .map(f => f.locator === registrationPage.phoneInput
                 ? { ...f, value: REGISTR_USER.invalidPhone }
                 : f,
             )
@@ -88,7 +101,8 @@ test.describe('Registration page', () => {
         {tag: ['@registration']},
         async ({ registrationPage }) => {
             //делаем копию массива validUserFields, в котором только для поля Date of Birth меняется значение на невалидное
-            const fieldWithInvalidDateOfBirth = registrationPage.validUserFields.map(f => f.locator === registrationPage.dateOfBirthInput
+            const uniqueEmail = randomEmail('playwright');
+            const fieldWithInvalidDateOfBirth = registrationPage.getvalidUserFields(uniqueEmail).map(f => f.locator === registrationPage.dateOfBirthInput
                 ? { ...f, value: REGISTR_USER.invaliDateOfBirth }
                 : f,
             )

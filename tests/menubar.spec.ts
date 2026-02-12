@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures.ts';
-import { HomePage } from '../pages/home_page.ts';
+
 
 test.describe('Menubar', () => {
     
@@ -13,7 +13,7 @@ test.describe('Menubar', () => {
             body: screen,
             contentType: 'image/png',
         });   
-    })
+    });
 
     test('checking contact link',
         {tag: ['@menubar']},     
@@ -22,14 +22,28 @@ test.describe('Menubar', () => {
 
             await expect(contactPage.contactTitle).toBeVisible();
         }  
-    )
+    );
 
-    test.only('checking sign in link',
+    test('checking sign in link',
         {tag: ['@menubar']},     
         async ({ menuBar, loginPage }) => {
             await menuBar.signinLink.click();
 
             await expect(loginPage.loginTitle).toBeVisible();
         }  
-    )
+    );
+
+    test('checking transition by categories',
+        {tag: ['@menubar', '@categories']},
+        async ({ menuBar }) => {
+            await menuBar.checkTransitionByCategories();           
+        }
+    );
+
+    test('checking transition to rentals category', 
+        {tag: ['@menubar', '@categories']},
+        async ({ menuBar }) => {
+            await menuBar.checkTransitionToRentalsCategory();
+        }
+    );
 })

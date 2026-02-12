@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './base_page';
 import { REGISTR_USER } from '../fixtures';
+import { randomEmail } from '../helpers/random_email.ts'
 
 type FieldPair = { 
     locator: Locator, 
@@ -57,7 +58,7 @@ export class RegistrationPage extends BasePage {
         await this.navigate(this.registrUrl);
     }
 
-    get validUserFields(): FieldPair[] {
+    getvalidUserFields(email: string): FieldPair[] {
         return [
             {locator: this.firstNameInput, value: REGISTR_USER.firstName},
             {locator: this.lastNameInput, value: REGISTR_USER.lastName},
@@ -67,7 +68,7 @@ export class RegistrationPage extends BasePage {
             {locator: this.cityInput, value: REGISTR_USER.city},
             {locator: this.stateInput, value: REGISTR_USER.state},
             {locator: this.phoneInput, value: REGISTR_USER.phone},
-            {locator: this.emailInput, value: REGISTR_USER.email},
+            {locator: this.emailInput, value: email },
             {locator: this.passwordInput, value: REGISTR_USER.validPassword},
         ];
     }
@@ -78,8 +79,8 @@ export class RegistrationPage extends BasePage {
         }
     }
 
-    async fillTheRegistrationFormWithValidUser() {
-        await this.fillTheRegistrationForm(this.validUserFields);
+    async fillTheRegistrationFormWithValidUser(email: string) {
+        await this.fillTheRegistrationForm(this.getvalidUserFields(email));
     }
 
     async submitEmptyFormAndCheckErrors() {

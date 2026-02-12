@@ -6,6 +6,7 @@ import { RegistrationPage } from './pages/registration_page';
 import { ForgotPasswordPage } from './pages/forgot_password_page';
 import { MenuBar } from './pages/elements/menubar';
 import { ContactPage } from './pages/contact_page';
+import { MyAccountPage } from './pages/my_account_page';
 
 
 export const REGISTR_USER = {
@@ -20,7 +21,7 @@ export const REGISTR_USER = {
     country: 'BY',
     phone: '375290000000',
     invalidPhone: '+375290000000',
-    email: '5test@mail.ru',
+    // email: 'test@mail.ru',
     unregisteredEmail: 'unregistrtest@mail.ru',
     invalidEmailFormat: 'test',
     validPassword: '5Suc$esS',
@@ -36,6 +37,7 @@ type Fixtures = {
     forgotPasswordPage: ForgotPasswordPage;
     menuBar: MenuBar;
     contactPage: ContactPage;
+    myAccountPage: MyAccountPage;
 }
 
 export const test = base.extend<Fixtures>({
@@ -65,7 +67,6 @@ export const test = base.extend<Fixtures>({
     },    
 
     menuBar: async ({ page }, use) => {
-    contactPage: ContactPage;
         const menuBar = new MenuBar(page);
         await use(menuBar);
     },  
@@ -74,6 +75,11 @@ export const test = base.extend<Fixtures>({
         const contactPage = new ContactPage(page);
         await use(contactPage);
     },    
+
+    myAccountPage: async ({ page }, use) => {
+        const myAccountPage = new MyAccountPage(page);
+        await use(myAccountPage);
+    },       
 });
 
 export const expect = BaseExpect;
