@@ -30,7 +30,7 @@ test.describe('Registration page', () => {
         }
     )    
 
-    test.only('user registration, error on duplicate registration, user login',
+    test('user registration, error on duplicate registration, user login',
         {tag: ['@registration']},
         async ({ registrationPage, loginPage, myAccountPage, page, menuBar }) => {  
             const uniqueEmail = randomEmail('playwright');
