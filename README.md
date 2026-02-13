@@ -28,8 +28,8 @@ npm test
 | 1.  | Registration page | registration page title is visible                  | @registration |
 | 2.  | Registration page | checking the visibility and number of errors        | @registration |
 |     |                   | in required fields by submitting an empty form      |               |
-| 3   | Registration page | user registration                                   | @registration |
-| 4   | Registration page | error on duplicate registration                     | @registration |
+| 4.  | Registration page | user registration and check error on duplicate      | @registration |
+|     |                   | registration                                        |               |
 | 5.  | Registration page | error checking for incorrect email format           | @registration |
 | 6.  | Registration page | error checking for incorrect phone format           | @registration |
 | 7.  | Registration page | error checking for an incorrect value date of birth | @registration |

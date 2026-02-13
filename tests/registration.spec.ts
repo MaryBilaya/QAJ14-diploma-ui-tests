@@ -33,7 +33,7 @@ test.describe('Registration page', () => {
     }
   );
 
-  test.only('user registration and error on duplicate registration', { tag: ['@registration'] }, async ({ registrationPage, loginPage, page }) => {
+  test('user registration and check error on duplicate registration', { tag: ['@registration'] }, async ({ registrationPage, loginPage, page }) => {
     //1. user registration
     await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
     await registrationPage.countryInput.selectOption(REGISTR_USER.country);
