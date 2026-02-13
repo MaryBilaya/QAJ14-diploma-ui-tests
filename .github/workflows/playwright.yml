@@ -2,19 +2,19 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    container: 
+    container:
       image: mcr.microsoft.com/playwright:v1.58.2-jammy
 
     steps:
-      - uses: actions/checkout@v4  
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
@@ -26,7 +26,7 @@ jobs:
         run: npx playwright test
 
       - name: Upload Playwright report
-        if: ${{ !cancelled() }}                         
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report

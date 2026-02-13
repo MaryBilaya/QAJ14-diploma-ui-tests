@@ -23,8 +23,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { open: 'always'}],
-    ['allure-playwright', { resultsDir: 'allure-results'}],
+    ['html', { open: 'always' }],
+    ['allure-playwright', { resultsDir: 'allure-results' }]
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -34,7 +34,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     screenshot: 'off',
-    trace: 'retain-on-failure',      //retain-on-failure — сохраняет trace только на фейле, on-first-retry — идеален для CI, on — всегда (не рекомендую для CI)
+    trace: 'retain-on-failure' //retain-on-failure — сохраняет trace только на фейле, on-first-retry — идеален для CI, on — всегда (не рекомендую для CI)
   },
   timeout: 60_000,
 
@@ -42,7 +42,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'] }
     }
 
     // {
@@ -74,7 +74,7 @@ export default defineConfig({
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
-  ],
+  ]
 
   /* Run your local dev server before starting the tests */
   // webServer: {

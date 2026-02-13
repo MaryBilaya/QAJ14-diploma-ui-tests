@@ -16,6 +16,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
+    "format": "npx prettier --write .",
     "pw:registr": "npx playwright test --grep '@registration'",
     "allure:clear": "rmdir /S /Q allure-results 2>nul & rmdir /S /Q allure-report 2>nul",
     "allure:history": "powershell -Command \"if (Test-Path 'allure-report/history') { if (!(Test-Path 'allure-results')) { New-Item -ItemType Directory -Path 'allure-results' | Out-Null }; Copy-Item 'allure-report/history' 'allure-results/history' -Recurse -Force }\"",
@@ -27,6 +28,7 @@
     "@types/node": "^25.2.1",
     "allure-commandline": "^2.36.0",
     "allure-playwright": "^3.4.5",
+    "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

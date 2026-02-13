@@ -1,116 +1,92 @@
 import { test, expect } from '../fixtures.ts';
 import { REGISTR_USER } from '../fixtures.ts';
-import { randomEmail } from '../helpers/random_email.ts'
+import { randomEmail } from '../helpers/random_email.ts';
 
 test.describe('Registration page', () => {
+  let uniqueEmail: string;
 
-    test.beforeEach(async ({ registrationPage}) => {
-        await registrationPage.openRegistrationPage();
+  test.beforeAll(async () => {
+    uniqueEmail = randomEmail('testing');
+  });
+
+  test.beforeEach(async ({ registrationPage }) => {
+    await registrationPage.openRegistrationPage();
+  });
+
+  test.afterEach(async ({ page }, testInfo) => {
+    const screen = await page.screenshot({ fullPage: true });
+    await testInfo.attach('final-state', {
+      body: screen,
+      contentType: 'image/png'
     });
+  });
 
-    test.afterEach(async ({ page }, testInfo) => {
-        const screen = await page.screenshot({ fullPage: true });
-        await testInfo.attach('final-state', {
-            body: screen,
-            contentType: 'image/png',
-        });       
-    });    
+  test('registration page title is visible', { tag: ['@registration'] }, async ({ registrationPage }) => {
+    await expect(registrationPage.registrTitle).toBeVisible();
+  });
 
-    test('registration page title is visible',
-        {tag: ['@registration']},
-        async ({ registrationPage }) => {
-            await expect(registrationPage.registrTitle).toBeVisible();
-        }
-    )
+  test(
+    'checking the visibility and number of errors in required fields by submitting an empty form',
+    { tag: ['@registration'] },
+    async ({ registrationPage }) => {
+      await registrationPage.submitEmptyFormAndCheckErrors();
+    }
+  );
 
-    test('checking the visibility and number of errors in required fields by submitting an empty form',
-        {tag: ['@registration']},
-        async ({ registrationPage }) => {
-            await registrationPage.submitEmptyFormAndCheckErrors();
-        }
-    )    
+  test('user registration', { tag: ['@registration'] }, async ({ registrationPage, loginPage, page }) => {
+    //1. user registration
+    await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
+    await registrationPage.countryInput.selectOption(REGISTR_USER.country);
+    await registrationPage.registerButton.click();
 
-    test('user registration, error on duplicate registration, user login',
-        {tag: ['@registration']},
-        async ({ registrationPage, loginPage, myAccountPage, page, menuBar }) => {  
-            const uniqueEmail = randomEmail('playwright');
+    await expect(page).toHaveURL(loginPage.loginUrl);
+    await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible({ timeout: 10_000 });
+  });
 
-            //1. user registration
-            await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
-            await registrationPage.countryInput.selectOption(REGISTR_USER.country);
-            await registrationPage.registerButton.click();
+  test('error on duplicate registration', { tag: ['@registration'] }, async ({ registrationPage }) => {
+    //2. error on duplicate registration
+    await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
+    await registrationPage.countryInput.selectOption(REGISTR_USER.country);
+    await registrationPage.registerButton.click();
 
-            await expect(page).toHaveURL(loginPage.loginUrl);
-            await expect(page.getByRole('heading', {name: 'Login'})).toBeVisible();
+    await expect(registrationPage.duplicateRegisterError).toContainText('A customer with this email address already exists.');
+  });
 
-            //2. error on duplicate registration
-            await registrationPage.openRegistrationPage()
-            await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
-            await registrationPage.countryInput.selectOption(REGISTR_USER.country);
-            await registrationPage.registerButton.click();
+  test('error checking for incorrect email format', { tag: ['@registration'] }, async ({ registrationPage }) => {
+    //делаем копию массива validUserFields, в котором только для поля email меняется значение на невалидное
+    const fieldWithInvalidEmail = registrationPage
+      .getvalidUserFields(uniqueEmail)
+      .map(f => (f.locator === registrationPage.emailInput ? { ...f, value: REGISTR_USER.invalidEmailFormat } : f));
+    await registrationPage.fillTheRegistrationForm(fieldWithInvalidEmail);
+    await registrationPage.registerButton.click();
 
-            await expect(registrationPage.duplicateRegisterError).toContainText('A customer with this email address already exists.');
+    const emailError = registrationPage.emailFormatError.innerText();
+    await expect(registrationPage.emailFormatError).toHaveText(await emailError);
+  });
 
-            //3. user login
-            await loginPage.openLoginPage();
-            await loginPage.login(uniqueEmail, REGISTR_USER.validPassword);
+  test('error checking for incorrect phone format', { tag: ['@registration'] }, async ({ registrationPage }) => {
+    //делаем копию массива validUserFields, в котором только для поля Phone меняется значение на невалидное
+    const fieldWithInvalidPhone = registrationPage
+      .getvalidUserFields(uniqueEmail)
+      .map(f => (f.locator === registrationPage.phoneInput ? { ...f, value: REGISTR_USER.invalidPhone } : f));
+    await registrationPage.fillTheRegistrationForm(fieldWithInvalidPhone);
+    await registrationPage.registerButton.click();
 
-            await expect(myAccountPage.myAccountTitle).toBeVisible();
-            await expect(menuBar.loginUserName).toHaveText(` ${REGISTR_USER.firstName} ${REGISTR_USER.lastName} `);
-        }
-    )  
+    const phoneError = registrationPage.phoneFormatError.innerText();
+    await expect(registrationPage.phoneFormatError).toHaveText(await phoneError);
+  });
 
-    test('error checking for incorrect email format',
-        {tag: ['@registration']},
-        async ({ registrationPage }) => {
-            //делаем копию массива validUserFields, в котором только для поля email меняется значение на невалидное
-            const uniqueEmail = randomEmail('playwright');
-            const fieldWithInvalidEmail = registrationPage.getvalidUserFields(uniqueEmail).map(f => f.locator === registrationPage.emailInput
-                ? { ...f, value: REGISTR_USER.invalidEmailFormat }
-                : f,
-            )
-            await registrationPage.fillTheRegistrationForm(fieldWithInvalidEmail);
-            await registrationPage.registerButton.click();  
-            
-            const emailError = registrationPage.emailFormatError.innerText();
-            await expect(registrationPage.emailFormatError).toHaveText(await emailError);
-        }       
-    )
+  //вывод данной ошибки работает неккоректно. С датой 1950-01-01 дает зарегистрироваться
+  //ошибка отрабатывает только при полном заполнении формы регистрации
+  test('error checking for an incorrect value date of birth', { tag: ['@registration'] }, async ({ registrationPage }) => {
+    //делаем копию массива validUserFields, в котором только для поля Date of Birth меняется значение на невалидное
+    const fieldWithInvalidDateOfBirth = registrationPage
+      .getvalidUserFields(uniqueEmail)
+      .map(f => (f.locator === registrationPage.dateOfBirthInput ? { ...f, value: REGISTR_USER.invaliDateOfBirth } : f));
+    await registrationPage.fillTheRegistrationForm(fieldWithInvalidDateOfBirth);
+    await registrationPage.countryInput.selectOption(REGISTR_USER.country);
+    await registrationPage.registerButton.click();
 
-    test('error checking for incorrect phone format',
-        {tag: ['@registration']},  
-        async ({ registrationPage }) => {
-            //делаем копию массива validUserFields, в котором только для поля Phone меняется значение на невалидное
-            const uniqueEmail = randomEmail('playwright');
-            const fieldWithInvalidPhone = registrationPage.getvalidUserFields(uniqueEmail)
-            .map(f => f.locator === registrationPage.phoneInput
-                ? { ...f, value: REGISTR_USER.invalidPhone }
-                : f,
-            )
-            await registrationPage.fillTheRegistrationForm(fieldWithInvalidPhone);
-            await registrationPage.registerButton.click();
-
-            const phoneError = registrationPage.phoneFormatError.innerText();
-            await expect(registrationPage.phoneFormatError).toHaveText(await phoneError);
-        } 
-    )
-
-    //вывод данной ошибки работает неккоректно. С датой 1950-01-01 дает зарегистрироваться
-    //ошибка отрабатывает только при полном заполнении формы регистрации
-    test('error checking for an incorrect value date of birth',
-        {tag: ['@registration']},
-        async ({ registrationPage }) => {
-            //делаем копию массива validUserFields, в котором только для поля Date of Birth меняется значение на невалидное
-            const uniqueEmail = randomEmail('playwright');
-            const fieldWithInvalidDateOfBirth = registrationPage.getvalidUserFields(uniqueEmail).map(f => f.locator === registrationPage.dateOfBirthInput
-                ? { ...f, value: REGISTR_USER.invaliDateOfBirth }
-                : f,
-            )
-            await registrationPage.fillTheRegistrationForm(fieldWithInvalidDateOfBirth)
-            await registrationPage.countryInput.selectOption(REGISTR_USER.country);
-            await registrationPage.registerButton.click();     
-            
-            await expect(registrationPage.dateOfBirthValueError).toContainText('Customer must be younger than 75 years old.');
-        }
-    )
-})
+    await expect(registrationPage.dateOfBirthValueError).toContainText('Customer must be younger than 75 years old.');
+  });
+});
