@@ -33,18 +33,17 @@ test.describe('Registration page', () => {
     }
   );
 
-  test('user registration', { tag: ['@registration'] }, async ({ registrationPage, loginPage, page }) => {
+  test.only('user registration and error on duplicate registration', { tag: ['@registration'] }, async ({ registrationPage, loginPage, page }) => {
     //1. user registration
     await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
     await registrationPage.countryInput.selectOption(REGISTR_USER.country);
-    await registrationPage.registerButton.click();
 
-    await expect(page).toHaveURL(loginPage.loginUrl);
+    await Promise.all([page.waitForURL(loginPage.loginUrl, { timeout: 15_000 }), registrationPage.registerButton.click()]);
+
     await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible({ timeout: 10_000 });
-  });
 
-  test('error on duplicate registration', { tag: ['@registration'] }, async ({ registrationPage }) => {
     //2. error on duplicate registration
+    await registrationPage.openRegistrationPage();
     await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
     await registrationPage.countryInput.selectOption(REGISTR_USER.country);
     await registrationPage.registerButton.click();
