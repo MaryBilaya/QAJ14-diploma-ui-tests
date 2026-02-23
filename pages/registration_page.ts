@@ -1,7 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './base_page';
 import { REGISTR_USER } from '../fixtures';
-import { randomEmail } from '../helpers/random_email.ts';
 
 type FieldPair = {
   locator: Locator;

@@ -1,21 +1,57 @@
-# playwright-ui-tests-diploma
+# Playwright UI Tests
 
-## Техническое задание
+Автоматизированные UI-тесты дипломного проекта на Playwright+Typescript. Репозиторий демонстрирует структуру реального тестового фреймворка: Page Object-подход, фикстуры, хелперы и отчетность в Allure.
 
-- Реализовать тестовый фреймворк для UI тестирования для web приложения https://practicesoftwaretesting.com/:
-- тестовый фреймворк брать на свое усмотрение: WDIO (BDD по желанию), cypress или playwright - минимум 3 разных страницы - минимум 10 тестов на каждую страницу
-- использовать Page Object, Page Factory
-- Добавить allure репортер
-- Использовать различные локаторы и селекторы
-- Организовывать тесты в группы
-- Настроить в ci (на свой выбор) запуск тестов в MR и невозможность вмержить если тесты упали
+## 🧰 Стек технологий
+- Playwright Test
+- TypeScript
+- Node.js
+- Page Object Model
+- Общие фикстуры
+- Хелперы
+- Allure Report
+- GitHub Actions - CI/CD: тесты запускаются автоматически при каждом push в репозиторий
+
+## 📂 Структура проекта
+```text
+├─ .giyhub\workflows
+│  ├─ playwright.yml
+├─ helpers
+│  ├─ attachments.ts
+│  ├─ random_email.ts
+├─ pages
+│  ├─ elements
+|     ├─ menubar.ts
+|  ├─ base_page.ts
+|  ├─ contact_page.ts
+|  ├─ forgot_password_page.ts
+|  ├─ home_page.ts
+|  ├─ login_page.ts
+|  ├─ my_account_page.ts
+|  ├─ registration_page.ts
+├─ tests/
+│  ├─ home.spec.ts      
+│  ├─ login.spec.ts      
+│  ├─ menubar.spec.ts        
+│  └─ registration.spec.ts      
+├─ .prettierrc              
+├─ fixtures.ts  
+├─ package.json
+├─ playwright.config.ts
+└─ README.md
+```
+# 🚀 Запуск проекта
+## клонирование репозитория
+* git clone https://github.com/MaryBilaya/QAJ14-diploma-ui-tests.git
+* cd QAJ14-diploma-ui-tests
+
+## Установка зависимостей
+npm install
 
 ## Запуск автотестов
-
 npm test
 
 ## Просмотр allure отчета с историчностью прогонов (History, Trend)
-
 1. npm test
 2. npm run allure:history
 3. npm run allure:report

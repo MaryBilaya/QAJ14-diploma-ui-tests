@@ -40,8 +40,6 @@ test.describe('Registration page', () => {
 
     await Promise.all([page.waitForURL(loginPage.loginUrl, { timeout: 15_000 }), registrationPage.registerButton.click()]);
 
-    // await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible({ timeout: 10_000 });
-
     //2. error on duplicate registration
     await registrationPage.openRegistrationPage();
     await registrationPage.fillTheRegistrationFormWithValidUser(uniqueEmail);
